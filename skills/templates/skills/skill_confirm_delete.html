@@ -1,0 +1,14 @@
+{% extends "skills/base.html" %}
+
+{% block title %}Delete skill · Campus SkillSwap{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Delete &ldquo;{{ object.title }}&rdquo;?</h1>
+<p>This cannot be undone.</p>
+
+<form method="post" class="d-inline">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Delete</button>
+  <a href="{% url 'skills:detail' object.pk %}" class="btn btn-link">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "skills/base.html" %}
+
+{% block title %}{{ skill.title }} · Campus SkillSwap{% endblock %}
+
+{% block content %}
+<article>
+  <h1 class="mb-2">{{ skill.title }}</h1>
+  <p class="text-muted mb-3">
+    <span class="badge bg-light text-dark">{{ skill.category.name }}</span>
+    by <strong>{{ skill.owner.username }}</strong>
+  </p>
+
+  <dl class="row">
+    <dt class="col-sm-3">Price</dt>
+    <dd class="col-sm-9">{{ skill.display_price }}</dd>
+
+    <dt class="col-sm-3">Availability</dt>
+    <dd class="col-sm-9">
+      <span class="badge {% if skill.availability == 'available' %}bg-success{% else %}bg-secondary{% endif %}">
+        {{ skill.get_availability_display }}
+      </span>
+    </dd>
+
+    <dt class="col-sm-3">Contact preference</dt>
+    <dd class="col-sm-9">{{ skill.get_contact_preference_display }}</dd>
+
+    {% if review_aggregate.count %}
+      <dt class="col-sm-3">Average rating</dt>
+      <dd class="col-sm-9">
+        {{ review_aggregate.avg|floatformat:1 }}
+        <small class="text-muted">({{ review_aggregate.count }} review{{ review_aggregate.count|pluralize }})</small>
+      </dd>
+    {% endif %}
+  </dl>
+
+  <h2 class="h5 mt-4">Description</h2>
+  <p>{{ skill.description|linebreaks }}</p>
+
+  {% if user == skill.owner %}
+    <div class="mb-3">
+      <a href="{% url 'skills:update' skill.pk %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+      <a href="{% url 'skills:delete' skill.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+    </div>
+  {% endif %}
+
+  {% if user.is_authenticated and user != skill.owner %}
+    {% if skill.availability == 'available' %}
+      <section class="card mt-4">
+        <div class="card-body">
+          <h2 class="h5">Request a session</h2>
+          <form method="post" action="{% url 'skills:request_booking' skill.pk %}">
+            {% csrf_token %}
+            {% for field in booking_form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Send request</button>
+          </form>
+        </div>
+      </section>
+    {% else %}
+      <div class="alert alert-secondary mt-4">
+        This skill is currently marked unavailable. Booking requests are paused.
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <section class="mt-5">
+    <h2 class="h5">Reviews</h2>
+    {% if reviews %}
+      {% include "skills/partials/_review_list.html" %}
+    {% else %}
+      <p class="text-muted">No reviews yet.</p>
+    {% endif %}
+
+    {% if can_review %}
+      <div class="card mt-3">
+        <div class="card-body">
+          <h3 class="h6">Leave a review</h3>
+          <form method="post" action="{% url 'skills:submit_review' skill.pk %}">
+            {% csrf_token %}
+            {% for field in review_form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Save review</button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

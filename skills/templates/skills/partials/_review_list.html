@@ -1,0 +1,15 @@
+{# Required context: reviews #}
+{% for review in reviews %}
+  <div class="border-bottom py-3">
+    <div class="d-flex justify-content-between">
+      <strong>{{ review.author.username }}</strong>
+      <span class="text-warning">
+        {% for _ in "12345"|make_list %}
+          {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+        {% endfor %}
+      </span>
+    </div>
+    <p class="mb-1 mt-2">{{ review.text|linebreaks }}</p>
+    <small class="text-muted">{{ review.created_at|date:"Y-m-d" }}</small>
+  </div>
+{% endfor %}

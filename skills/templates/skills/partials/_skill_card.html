@@ -1,0 +1,14 @@
+<div class="card h-100 shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="{% url 'skills:detail' skill.pk %}" class="text-decoration-none">
+        {{ skill.title }}
+      </a>
+    </h5>
+    <p class="card-subtitle mb-2 text-muted">{{ skill.category.name }}</p>
+    <p class="mb-1"><strong>{{ skill.display_price }}</strong></p>
+    <span class="badge {% if skill.availability == 'available' %}bg-success{% else %}bg-secondary{% endif %}">
+      {{ skill.get_availability_display }}
+    </span>
+  </div>
+</div>
