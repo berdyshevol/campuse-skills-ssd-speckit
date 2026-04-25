@@ -1,0 +1,63 @@
+{% extends "skills/base.html" %}
+
+{% block title %}Dashboard · Campus SkillSwap{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Welcome, {{ user.username }}</h1>
+
+<section class="mb-5">
+  <h2 class="h4">My posts</h2>
+  {% if my_skills %}
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr><th>Title</th><th>Category</th><th>Price</th><th>Availability</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for skill in my_skills %}
+          <tr>
+            <td>
+              <a href="{% url 'skills:detail' skill.pk %}" class="text-decoration-none">
+                {{ skill.title }}
+              </a>
+            </td>
+            <td>{{ skill.category.name }}</td>
+            <td>{{ skill.display_price }}</td>
+            <td>{{ skill.get_availability_display }}</td>
+            <td class="text-end">
+              <a href="{% url 'skills:update' skill.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'skills:delete' skill.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">
+      You haven't posted any skills yet —
+      <a href="{% url 'skills:create' %}">share your first one</a>.
+    </p>
+  {% endif %}
+</section>
+
+<section class="mb-5">
+  <h2 class="h4">Requests sent</h2>
+  {% if requests_sent %}
+    {% for booking in requests_sent %}
+      {% include "skills/partials/_booking_row.html" with perspective='sent' %}
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">You haven't sent any booking requests yet.</p>
+  {% endif %}
+</section>
+
+<section class="mb-5">
+  <h2 class="h4">Requests received</h2>
+  {% if requests_received %}
+    {% for booking in requests_received %}
+      {% include "skills/partials/_booking_row.html" with perspective='received' %}
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">You haven't received any booking requests yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

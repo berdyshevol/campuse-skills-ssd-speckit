@@ -1,0 +1,10 @@
+{% extends "skills/base.html" %}
+
+{% block title %}Signed out · Campus SkillSwap{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+  <h1>You have been signed out.</h1>
+  <p><a href="{% url 'skills:list' %}">Back to listings</a></p>
+</div>
+{% endblock %}
