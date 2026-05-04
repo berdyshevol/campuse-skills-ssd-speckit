@@ -3,6 +3,9 @@
 > A small student-to-student skill marketplace — post a skill you can teach,
 > browse what others offer, request a session, and review afterwards.
 
+**Live demo:** <https://berdyshevo.pythonanywhere.com/> · log in with one of
+the [demo accounts](#demo-accounts) below.
+
 Built end-to-end with [**GitHub Spec Kit**](https://github.com/github/spec-kit):
 the spec, plan, data model, and tasks under
 [`specs/001-campus-skillswap/`](specs/001-campus-skillswap/) were authored
